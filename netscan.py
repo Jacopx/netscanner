@@ -12,10 +12,7 @@ def scanner(nm, sadd = '192.168.1.0/24'):
         if 'mac' in nm[h]['addresses']:
             mac.append(nm[h]['addresses']['mac'])
             ip.append(nm[h]['addresses']['ipv4'])
-            if nm[h]['vendor'].iteritems()>0:
-                vend.append(nm[h]['vendor'].values())
-            else:
-                vend.append('NOT RETRIVE')
+            vend.append(nm[h]['vendor'].values())
     return ip, mac, vend
 
 # Header of the software with time
