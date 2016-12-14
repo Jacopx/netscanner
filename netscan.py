@@ -2,6 +2,8 @@ import nmap
 import datetime
 import time
 import os
+import glob
+
 
 # Network scanner function return the 2 list of MAC and IP addresses
 def scanner(nm, sadd = '192.168.1.0/24'):
@@ -70,7 +72,13 @@ while c!=9:
         else:
             raise SystemExit
     elif c==2:
-        print 'Current Network: ' + os.system('nm-tool | grep \*')
+        db=glob.glob('database/*.db')
+        for net in db:
+            print '/%s' % (net)
+        netname = raw_input('Insert the Network Name: ')
+        netname = 'database/%s' % (netname)
+        f=open(netname, 'rw')
+        print f
     # elif c==3:
     #
     # elif c==4:
