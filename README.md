@@ -28,14 +28,14 @@ git clone https://github.com/Jacopx/netscanner.git
 
 ## Running the tests
 
-Explain how to run the automated tests for this system
+This tools needs to be run with sudo (for nmap scan parameters).
 
 ### Break down into end to end tests
 
-Explain what these tests test and why
+Start the Network Manager with:
 
 ```
-Give an example
+sudo python netscan.py
 ```
 
 ### And coding style tests
