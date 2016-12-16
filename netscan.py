@@ -37,9 +37,9 @@ while c!=9:
             fr=open(netname, 'r')
             fa=open(netname, 'a')
             menu(0)
-            print fr, fa
         except:
-            print 'File opening faile!'
+            menu(0)
+            print 'File opening failed!'
             print 'Creation of the new DB!'
             new=1
             f=open(netname, 'w+')

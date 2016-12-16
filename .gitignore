@@ -2,3 +2,4 @@
 database/jfrg.db
 database/lunax.db
 database/ponzone.db
+*.pyc
