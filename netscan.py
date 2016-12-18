@@ -10,6 +10,7 @@ c=0
 while c!=9:
     c=menu(1)
     if c==1: # Simple Network Scan
+
         # Network Informations
         sc_add = raw_input('Address/Netmask(PL): ')
         nm = nmap.PortScanner()
@@ -25,7 +26,9 @@ while c!=9:
             continue
         else:
             raise SystemExit
+
     elif c==2:
+
         new=0
         know=[]
         db=glob.glob('database/*.db')
@@ -77,9 +80,21 @@ while c!=9:
                 dbadd(fa, ip, mac, vend, know)
             else:
                 print 'Host deleted!'
+    elif c==3:
 
         os.system('clear')
+        menu(0)
+        db=glob.glob('database/*.db')
+        for net in db:
+            print '/%s' % (net)
+        show = raw_input('Insert the Network Name to show: ')
+        show = 'database/%s.db' % (show)
+        fr=open(show, 'r')
+        print fr
+        show_file(fr)
+
     elif c==5:
+
         os.system('clear')
         menu(0)
         db=glob.glob('database/*.db')
@@ -88,7 +103,10 @@ while c!=9:
         dbdel = raw_input('Insert the Network Name to delete: ')
         dbdel = 'rm database/%s.db' % (dbdel)
         os.system(dbdel)
+
     elif c==9:
+
         print 'Goodbye!'
         raise SystemExit
+
     print '---------------------------------------------'

@@ -55,6 +55,26 @@ def fprinter(f, ip, mac, vend):
             f.write(ip[i] + ',' + k + '\n')
         i=i+1
 
+def show_file(f):
+    entry = []
+    fip=[]
+    fmac=[]
+    fvend=[]
+
+    for line in f:
+        entry=line.split(',')
+        fip.append(entry[0])
+        fmac.append(entry[1])
+        if len(entry)>2:
+            fvend.append(entry[2])
+
+    for i in range(0,len(fmac)):
+        if len(fvend[i])>0:
+            print ' %s\t %s\t%s' % (fip[i], fmac[i], fvend[i])
+        else:
+            print ' %s\t %s' % (fip[i], fmac[i])
+    f.close()
+
 def checkf(f, ip, mac, vend):
     know = []
     entry = []
