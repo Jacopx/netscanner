@@ -51,29 +51,34 @@ while c!=9:
         ip, mac, vend = scanner(nm) # Function call for your network
 
         if new==1:
+
+            for i in range(len(mac)):
+                print 'New host: ' + mac[i] + ' ---> ' + ip[i] + ' (' + vend[i] + ')'
             fprinter(f,ip,mac,vend) # Calling print to file function
-        else:
-            know = checkf(fr,ip,mac,vend) # Calling the checking batabase function
-            i=0
-            nn=0
-            for k in mac:
-                if know[i]==0:
-                    nn=1
-                    if k in vend:
-                        print 'New host: ' + k + ' ---> ' + ip[i] + ' (' + vend[k] + ')'
-                    else:
-                        print 'New host: ' + k + ' ---> ' + ip[i]
-                i=i+1
-        if nn==0:
-            print 'No new hosts'
-            c=input('Back to home: ')
-            os.system('clear')
-        else:
-            m = input('Do you want to add this new host to the db (1): ')
-            if m==1:
-                dbadd(fa, ip, mac, vend, know)
+
+            c=input('Back to home (1): ')
+            if c==1:
+                os.system('clear')
+                continue
             else:
-                print 'Host deleted!'
+                raise SystemExit
+        else:
+
+            know, flag = checkf(fr,ip,mac,vend) # Calling the checking batabase function
+            i=0
+            if flag==1:
+                for i in range(len(mac)):
+                    if know[i]==0:
+                        print 'New host: ' + mac[i] + ' ---> ' + ip[i] + ' (' + vend[i] + ')'
+
+                m = input('Do you want to add this new host to the db (1): ')
+                if m==1:
+                    dbadd(fa, ip, mac, vend, know)
+            else:
+                print 'No new hosts'
+                c=input('Back to home: ')
+                os.system('clear')
+
     elif c==3:
 
         os.system('clear')

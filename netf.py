@@ -27,9 +27,7 @@ def menu(t):
         print '---------------------------------------------'
 # Network scanner function return the 2 list of MAC and IP addresses
 def scanner(nm):
-    mac = []
-    ip = []
-    vend = {}
+    mac = []; ip = []; vend = []; i=0
     add=netifaces.ifaddresses('en0')
     sadd = '%s/%d' % (add[netifaces.AF_INET][0]['addr'], IPAddress(add[netifaces.AF_INET][0]['netmask']).netmask_bits())
 
@@ -39,7 +37,11 @@ def scanner(nm):
         if 'mac' in nm[h]['addresses']:
             mac.append(nm[h]['addresses']['mac'])
             ip.append(nm[h]['addresses']['ipv4'])
-            vend.update(nm[h]['vendor'])
+            if mac[-1] in nm[h]['vendor']:
+                vend.append(nm[h]['vendor'][mac[-1]])
+            else:
+                vend.append('----')
+
     return ip, mac, vend
 
 # Function for printing the net table
@@ -48,22 +50,14 @@ def printer(ip, mac, vend):
     print '-------------------------------------------------------------'
     print '|      IP      |      MAC addrs      |        Vendor        |'
     print '-------------------------------------------------------------'
-    for k in mac:
-        if k in vend:
-            print ' %s\t %s\t%s' % (ip[i], k, vend[k])
-        else:
-            print ' %s\t %s' % (ip[i], k)
-        i=i+1
+
+    for i in range(len(mac)):
+        print ' %s\t %s\t%s' % (ip[i], mac[i], vend[i])
 
 # Function for printing the net table
 def fprinter(f, ip, mac, vend):
-    i=0
-    for k in mac:
-        if k in vend:
-            f.write(ip[i] + ',' + k + ',' + vend[k] + '\n')
-        else:
-            f.write(ip[i] + ',' + k + '\n')
-        i=i+1
+    for i in range(len(mac)):
+        f.write(ip[i] + ',' + mac[i] + ',' + vend[i] + '\n')
 
 def show_file(f):
     entry = []
@@ -87,6 +81,7 @@ def checkf(f, ip, mac, vend):
     fip=[]
     fmac=[]
     fvend=[]
+    flag=0
 
     for line in f:
         entry=line.split(',')
@@ -98,10 +93,11 @@ def checkf(f, ip, mac, vend):
     for k in mac:
         if k in fmac:
             know.append(1)
+            flag=1
         else:
             know.append(0)
     f.close()
-    return know
+    return know, flag
 
 def dbadd(f, ip, mac, vend, know):
     i=0
