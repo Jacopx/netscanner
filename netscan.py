@@ -6,7 +6,11 @@ import glob
 from netf import *
 import netifaces
 
-# START SCRIPT WITH MENU
+# Check if it's RUN with SUDO (root-permission)
+if os.geteuid()!=0:
+    print "You need root permissions to do this, zioooo!"
+    raise SystemExit
+# START THE MENU
 c=0
 while c!=9:
     c=menu(1)

@@ -18,6 +18,14 @@ and
 pip install python-nmap
 ```
 
+## Dependencies
+
+To run this script you will need this packages:
+```
+nmap datetime time os glob netifaces netaddr
+```
+
+
 ### Installing
 
 Simply clone this repository in your machine like this:
@@ -28,23 +36,44 @@ git clone https://github.com/Jacopx/netscanner.git
 
 ## Running the tests
 
-This tools needs to be run with sudo (for nmap scan parameters).
+This tools needs to be run with sudo (for nmap scan parameters). You need to change the interface of your network from the line 33:
+```
+add=netifaces.ifaddresses('en0')
+```
+The possible interface can be listed with:
+>>> import netifaces
+>>> netifaces.interfaces()
 
-### Break down into end to end tests
+The Wi-Fi of a MacBook is normally 'en0'.
+
+## Run the software
 
 Start the Network Manager with:
 
 ```
 sudo python netscan.py
 ```
-
-### And coding style tests
-
-Explain what these tests test and why
+You'll see a menu with the possibile function like this:
+```
+Network Scanner by Jacopx -- 21/12/2016 12:29
+---------------------------------------------
+1. Simple Network Scan
+2. Net Database Comparison
+3. Showing Database
+4. Edit Database
+5. Clear Database
+9. EXIT
+Choose:
 
 ```
-Give an example
-```
+You need to write the number of the function that you want to use:
+* 1 --> Function to scan all your network simply showing the results in a table. From here you CAN'T save the result in a external file.
+* 2 --> Function to scan all your network with database comparisons. The software will show all your database, if you add a name of a present db it will use it. If it's not already created it will build a new file.
+* 3 --> Showing an already created database
+* 4 --> NOT ALREADY IMPLEMENTED
+* 5 --> Delete batabase
+* 9 --> Bye Bye! ;) 
+
 
 ## Built With
 
