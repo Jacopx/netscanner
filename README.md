@@ -40,9 +40,11 @@ This tools needs to be run with sudo (for nmap scan parameters). You need to cha
 ```
 add=netifaces.ifaddresses('en0')
 ```
-The possible interface can be listed with:
+The possible interface can be listed with (run it in Python):
+```
 >>> import netifaces
 >>> netifaces.interfaces()
+```
 
 The Wi-Fi of a MacBook is normally 'en0'.
 
