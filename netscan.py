@@ -4,6 +4,7 @@ import time
 import os
 import glob
 from netf import *
+import netifaces
 
 # START SCRIPT WITH MENU
 c=0
@@ -11,14 +12,8 @@ while c!=9:
     c=menu(1)
     if c==1: # Simple Network Scan
 
-        # Network Informations
-        sc_add = raw_input('Address/Netmask(PL): ')
-        nm = nmap.PortScanner()
-        # Call scan function
-        if len(sc_add) == 0:
-            ip, mac, vend = scanner(nm) # Function call for scan default network 192.168.1.0/24
-        else:
-            ip, mac, vend = scanner(nm, sc_add) # Function call for scan network host insert by user
+        nm = nmap.PortScanner() # Calling NMAP function
+        ip, mac, vend = scanner(nm) # Call function for scan
         printer(ip,mac,vend) # Calling print function
         c=input('Back to home (1): ')
         if c==1:
@@ -28,33 +23,28 @@ while c!=9:
             raise SystemExit
 
     elif c==2:
-
-        new=0
-        know=[]
+        # Declaring Variable
+        new=0; know=[]
+        # Showing all database
         db=glob.glob('database/*.db')
         for net in db:
             print '/%s' % (net)
         netname = raw_input('Insert the Network Name: ')
         netname = 'database/%s.db' % (netname)
-        try:
+        try: # Try to open the files, the first for checking the database, the second for appending the net hosts
             fr=open(netname, 'r')
             fa=open(netname, 'a')
             menu(0)
-        except:
+        except: # If there is no database, create it!
             menu(0)
             print 'File opening failed!'
             print 'Creation of the new DB!'
             new=1
             f=open(netname, 'w+')
 
-        # Network Informations
-        sc_add = raw_input('Address/Netmask(PL): ')
-        nm = nmap.PortScanner()
         # Call scan function
-        if len(sc_add) == 0:
-            ip, mac, vend = scanner(nm) # Function call for scan default network 192.168.1.0/24
-        else:
-            ip, mac, vend = scanner(nm, sc_add)
+        nm = nmap.PortScanner()
+        ip, mac, vend = scanner(nm) # Function call for your network
 
         if new==1:
             fprinter(f,ip,mac,vend) # Calling print to file function
@@ -89,9 +79,19 @@ while c!=9:
             print '/%s' % (net)
         show = raw_input('Insert the Network Name to show: ')
         show = 'database/%s.db' % (show)
-        fr=open(show, 'r')
-        print fr
-        show_file(fr)
+        try: # Try to open the database
+            fr=open(show, 'r')
+            ip, mac, vend = show_file(fr)
+            printer(ip, mac, vend)
+        except:
+            print "Open failed!"
+
+        c=input('Back to home (1): ')
+        if c==1:
+            os.system('clear')
+            continue
+        else:
+            raise SystemExit
 
     elif c==5:
 
@@ -103,6 +103,13 @@ while c!=9:
         dbdel = raw_input('Insert the Network Name to delete: ')
         dbdel = 'rm database/%s.db' % (dbdel)
         os.system(dbdel)
+
+        c=input('Back to home (1): ')
+        if c==1:
+            os.system('clear')
+            continue
+        else:
+            raise SystemExit
 
     elif c==9:
 

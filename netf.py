@@ -1,6 +1,9 @@
 import datetime
 import time
 import os
+import netifaces
+from netaddr import IPAddress
+
 
 def menu(t):
     os.system('clear')
@@ -14,16 +17,23 @@ def menu(t):
     print '5. Clear Database'
     print '9. EXIT'
     if t==1:
-        c=input('Choose: ')
-        print '---------------------------------------------'
-        return c
+        try: # If NO input reprint the menu
+            c=input('Choose: ')
+            print '---------------------------------------------'
+            return c
+        except:
+            menu(1)
     else:
         print '---------------------------------------------'
 # Network scanner function return the 2 list of MAC and IP addresses
-def scanner(nm, sadd = '192.168.1.0/24'):
+def scanner(nm):
     mac = []
     ip = []
     vend = {}
+    add=netifaces.ifaddresses('en0')
+    sadd = '%s/%d' % (add[netifaces.AF_INET][0]['addr'], IPAddress(add[netifaces.AF_INET][0]['netmask']).netmask_bits())
+
+    print "Your Network is: " + sadd
     nm.scan(hosts=sadd, arguments='-sP')
     for h in nm.all_hosts():
         if 'mac' in nm[h]['addresses']:
@@ -68,12 +78,8 @@ def show_file(f):
         if len(entry)>2:
             fvend.append(entry[2])
 
-    for i in range(0,len(fmac)):
-        if len(fvend[i])>0:
-            print ' %s\t %s\t%s' % (fip[i], fmac[i], fvend[i])
-        else:
-            print ' %s\t %s' % (fip[i], fmac[i])
     f.close()
+    return fip, fmac, fvend
 
 def checkf(f, ip, mac, vend):
     know = []
