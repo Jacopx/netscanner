@@ -22,7 +22,7 @@ pip install python-nmap
 
 To run this script you will need this packages:
 ```
-nmap datetime time os glob netifaces netaddr
+nmap datetime time os glob netifaces netaddr PrettyTable
 ```
 
 
