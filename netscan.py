@@ -14,11 +14,12 @@ if os.geteuid()!=0:
 c=0
 while c!=9:
     c=menu(1)
+
     if c==1: # Simple Network Scan
 
         nm = nmap.PortScanner() # Calling NMAP function
-        ip, mac, vend = scanner(nm) # Call function for scan
-        printer(ip,mac,vend) # Calling print function
+        ip, mac, vend, name = scanner(nm) # Call function for scan
+        printer(ip,mac,vend,name) # Calling print function
         c=input('Back to home (1): ')
         if c==1:
             os.system('clear')
@@ -26,7 +27,8 @@ while c!=9:
         else:
             raise SystemExit
 
-    elif c==2:
+    elif c==2: # Net Database Comparison
+
         # Declaring Variable
         new=0; know=[]
         # Showing all database
@@ -48,13 +50,15 @@ while c!=9:
 
         # Call scan function
         nm = nmap.PortScanner()
-        ip, mac, vend = scanner(nm) # Function call for your network
+        ip, mac, vend, name = scanner(nm) # Function call for your network
 
         if new==1:
-
+            typ=[]
             for i in range(len(mac)):
-                print 'New host: ' + mac[i] + ' ---> ' + ip[i] + ' (' + vend[i] + ')'
-            fprinter(f,ip,mac,vend) # Calling print to file function
+                typ.append('NEW')
+
+            dbprinter(typ, ip, mac, vend, name)
+            fprinter(f, typ, ip, mac, vend, name) # Calling print to file function
 
             c=input('Back to home (1): ')
             if c==1:
@@ -64,45 +68,49 @@ while c!=9:
                 raise SystemExit
         else:
 
-            know, flag = checkf(fr,ip,mac,vend) # Calling the checking batabase function
-            i=0
-            if flag==1:
-                for i in range(len(mac)):
-                    if know[i]==0:
-                        print 'New host: ' + mac[i] + ' ---> ' + ip[i] + ' (' + vend[i] + ')'
+            typ = checkf(fr,ip,mac,vend) # Calling the checking batabase function
 
-                m = input('Do you want to add this new host to the db (1): ')
-                if m==1:
-                    dbadd(fa, ip, mac, vend, know)
-            else:
-                print 'No new hosts'
-                c=input('Back to home: ')
-                os.system('clear')
+            dbprinter(typ, ip, mac, vend, name)
+            m = input('Do you want to add this new host to the db (1): ')
+            if m==1:
+                fprinter(fa, ip, mac, vend, name, typ)
 
-    elif c==3:
+    elif c==3: # Showing Database
 
         os.system('clear')
         menu(0)
         db=glob.glob('database/*.db')
+
         for net in db:
             print '/%s' % (net)
+
         show = raw_input('Insert the Network Name to show: ')
         show = 'database/%s.db' % (show)
+
+        # fr=open(show, 'r')
+        # ip, mac, vend, name = show_file(fr)
+        # printer(ip, mac, vend, name)
+
         try: # Try to open the database
             fr=open(show, 'r')
-            ip, mac, vend = show_file(fr)
-            printer(ip, mac, vend)
+            ip, mac, vend, name = show_file(fr)
+            printer(ip, mac, vend, name)
         except:
             print "Open failed!"
 
         c=input('Back to home (1): ')
+
         if c==1:
             os.system('clear')
             continue
         else:
             raise SystemExit
 
-    elif c==5:
+    elif c==4: # Edit Database
+
+        print 'Function not already implemented, COOMING SOON!'
+
+    elif c==5: # Clear Database
 
         os.system('clear')
         menu(0)
@@ -120,7 +128,7 @@ while c!=9:
         else:
             raise SystemExit
 
-    elif c==9:
+    elif c==9: # EXIT
 
         print 'Goodbye!'
         raise SystemExit

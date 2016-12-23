@@ -1,10 +1,11 @@
 import datetime
 import time
 import os
-import netifaces
-from netaddr import IPAddress
+import netifaces # Package for network interface
+from netaddr import IPAddress # Package for IP addresse
+from prettytable import PrettyTable # Package for table
 
-
+# Menu function
 def menu(t):
     os.system('clear')
     now = datetime.datetime.now() #get time
@@ -25,88 +26,105 @@ def menu(t):
             menu(1)
     else:
         print '---------------------------------------------'
-# Network scanner function return the 2 list of MAC and IP addresses
+
+# The scanner function call the nmap package for scanning the network
 def scanner(nm):
-    mac = []; ip = []; vend = []; i=0
+    mac = []; ip = []; vend = []; htname=[]; i=0
     add=netifaces.ifaddresses('en0')
     sadd = '%s/%d' % (add[netifaces.AF_INET][0]['addr'], IPAddress(add[netifaces.AF_INET][0]['netmask']).netmask_bits())
 
     print "Your Network is: " + sadd
     nm.scan(hosts=sadd, arguments='-sP')
+
     for h in nm.all_hosts():
+        # If NMAP get the MAC...
         if 'mac' in nm[h]['addresses']:
             mac.append(nm[h]['addresses']['mac'])
-            ip.append(nm[h]['addresses']['ipv4'])
-            if mac[-1] in nm[h]['vendor']:
-                vend.append(nm[h]['vendor'][mac[-1]])
-            else:
-                vend.append('----')
+        else:
+            mac.append('XX:XX:XX:XX:XX:XX')
 
-    return ip, mac, vend
+        # The IPv4 address
+        ip.append(nm[h]['addresses']['ipv4'])
+
+        # If NMAP get the Host name...
+        if nm[h]['hostnames'][0]['name']!="":
+            htname.append(nm[h]['hostnames'][0]['name'])
+        else:
+            htname.append('----')
+
+        # If NMAP get the Vendor name...
+        if mac[-1] in nm[h]['vendor']:
+            vend.append(nm[h]['vendor'][mac[-1]])
+        else:
+            vend.append('----')
+
+    return ip, mac, vend, htname # Return all list
 
 # Function for printing the net table
-def printer(ip, mac, vend):
-    i=0
-    print '-------------------------------------------------------------'
-    print '|      IP      |      MAC addrs      |        Vendor        |'
-    print '-------------------------------------------------------------'
+def printer(ip, mac, vend, name):
+    # Table Header
+    t = PrettyTable(['IP', 'MAC addrs', 'Host Name', 'Vendor'])
 
+    # Adding row in the table
     for i in range(len(mac)):
-        print ' %s\t %s\t%s' % (ip[i], mac[i], vend[i])
+        t.add_row([ip[i], mac[i], name[i], vend[i]])
 
-# Function for printing the net table
-def fprinter(f, ip, mac, vend):
+    # Print the table
+    print t
+
+def dbprinter(typ, ip, mac, vend, name):
+    # Table Header
+    t = PrettyTable(['Type', 'IP', 'MAC addrs', 'Host Name', 'Vendor'])
+
+    # Adding row in the table
     for i in range(len(mac)):
-        f.write(ip[i] + ',' + mac[i] + ',' + vend[i] + '\n')
+        t.add_row([typ[i], ip[i], mac[i], name[i], vend[i]])
+
+    # Print the table
+    print t
+
+# Function for printing the net table in file
+def fprinter(f, typ, ip, mac, vend, name):
+    for i in range(len(mac)):
+        if typ[i]=="NEW":
+            f.write(ip[i] + ',' + mac[i] + ',' + name[i] + ',' + vend[i] + '\n')
 
 def show_file(f):
-    entry = []
-    fip=[]
-    fmac=[]
-    fvend=[]
+    # Declaring all lists
+    entry = []; fip=[]; fmac=[]; fvend=[]; fname=[]
 
+    # For each line in file
     for line in f:
         entry=line.split(',')
         fip.append(entry[0])
         fmac.append(entry[1])
-        if len(entry)>2:
-            fvend.append(entry[2])
+        fname.append(entry[2])
+        if len(entry)>3:
+            fvend.append(entry[3])
 
     f.close()
-    return fip, fmac, fvend
+
+    # Return all data
+    return fip, fmac, fvend, fname
 
 def checkf(f, ip, mac, vend):
-    know = []
-    entry = []
-    fip=[]
-    fmac=[]
-    fvend=[]
-    flag=0
+    # Declaring all lists
+    typ = []; entry = []; fip=[]; fmac=[]; fvend=[]
 
+    # For each line in file
     for line in f:
         entry=line.split(',')
         fip.append(entry[0])
         fmac.append(entry[1])
-        if len(entry)>2:
-            fvend.append(entry[2])
+        if len(entry)>3:
+            fvend.append(entry[3])
 
+    # Check if is a NEW or an already KNOW device
     for k in mac:
         if k in fmac:
-            know.append(1)
-            flag=1
+            typ.append('KNOW')
         else:
-            know.append(0)
+            typ.append('NEW')
     f.close()
-    return know, flag
 
-def dbadd(f, ip, mac, vend, know):
-    i=0
-    for k in mac:
-        if know[i]==0:
-            if k in vend:
-                f.write(ip[i] + ',' + k + ',' + vend[k] + '\n')
-            else:
-                f.write(ip[i] + ',' + k + ','+ '---\n')
-        i=i+1
-    f.close()
-    print 'Host added!\n'
+    return typ
