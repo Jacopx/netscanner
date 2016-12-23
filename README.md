@@ -22,11 +22,7 @@ pip install python-nmap
 
 To run this script you will need this packages:
 ```
-<<<<<<< HEAD
 nmap datetime time os glob netifaces netaddr PrettyTable
-=======
-nmap datetime time os glob netifaces netaddr PrettyTable netifaces
->>>>>>> try
 ```
 
 
@@ -78,7 +74,7 @@ You need to write the number of the function that you want to use:
 * 3 --> Showing an already created database
 * 4 --> NOT ALREADY IMPLEMENTED
 * 5 --> Delete batabase
-* 9 --> Bye Bye! ;) 
+* 9 --> Bye Bye! ;)
 
 
 ## Built With
