@@ -1,3 +1,4 @@
+import nmap
 import datetime
 import time
 import os
@@ -9,31 +10,31 @@ from prettytable import PrettyTable # Package for table
 def menu(t):
     os.system('clear')
     now = datetime.datetime.now() #get time
-    print 'Network Scanner by Jacopx -- ' + (now.strftime("%d/%m/%Y %H:%M"))
-    print '---------------------------------------------'
-    print '1. Simple Network Scan'
-    print '2. Net Database Comparison'
-    print '3. Showing Database'
-    print '4. Edit Database'
-    print '5. Clear Database'
-    print '9. EXIT'
+    print ('Network Scanner by Jacopx -- ' + (now.strftime("%d/%m/%Y %H:%M")))
+    print ('---------------------------------------------')
+    print ('1. Simple Network Scan')
+    print ('2. Net Database Comparison')
+    print ('3. Showing Database')
+    print ('4. Edit Database')
+    print ('5. Clear Database')
+    print ('9. EXIT')
     if t==1:
         try: # If NO input reprint the menu
             c=input('Choose: ')
-            print '---------------------------------------------'
+            print ('---------------------------------------------')
             return c
         except:
             menu(1)
     else:
-        print '---------------------------------------------'
+        print ('---------------------------------------------')
 
 # The scanner function call the nmap package for scanning the network
 def scanner(nm):
     mac = []; ip = []; vend = []; htname=[]; i=0
-    add=netifaces.ifaddresses('en0')
+    add=netifaces.ifaddresses('en5')
     sadd = '%s/%d' % (add[netifaces.AF_INET][0]['addr'], IPAddress(add[netifaces.AF_INET][0]['netmask']).netmask_bits())
 
-    print "Your Network is: " + sadd
+    print ("Your Network is: " + sadd)
     nm.scan(hosts=sadd, arguments='-sP')
 
     for h in nm.all_hosts():
@@ -70,7 +71,7 @@ def printer(ip, mac, vend, name):
         t.add_row([ip[i], mac[i], name[i], vend[i]])
 
     # Print the table
-    print t
+    print (t)
 
 def dbprinter(typ, ip, mac, vend, name):
     # Table Header
@@ -81,7 +82,7 @@ def dbprinter(typ, ip, mac, vend, name):
         t.add_row([typ[i], ip[i], mac[i], name[i], vend[i]])
 
     # Print the table
-    print t
+    print (t)
 
 # Function for printing the net table in file
 def fprinter(f, typ, ip, mac, vend, name):

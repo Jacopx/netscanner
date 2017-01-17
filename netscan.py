@@ -8,7 +8,7 @@ import netifaces
 
 # Check if it's RUN with SUDO (root-permission)
 if os.geteuid()!=0:
-    print "You need root permissions to do this, zioooo!"
+    print ("You need root permissions to do this, zioooo!")
     raise SystemExit
 # START THE MENU
 c=0
@@ -33,18 +33,20 @@ while c!=9:
         new=0; know=[]
         # Showing all database
         db=glob.glob('database/*.db')
+
         for net in db:
-            print '/%s' % (net)
-        netname = raw_input('Insert the Network Name: ')
-        netname = 'database/%s.db' % (netname)
+            print ('/' + net)
+
+        netname = input('Insert the Network Name: ')
+        netname = ('database/{0}.db'.format(netname))
         try: # Try to open the files, the first for checking the database, the second for appending the net hosts
             fr=open(netname, 'r')
             fa=open(netname, 'a')
             menu(0)
         except: # If there is no database, create it!
             menu(0)
-            print 'File opening failed!'
-            print 'Creation of the new DB!'
+            print ('File opening failed!')
+            print ('Creation of the new DB!')
             new=1
             f=open(netname, 'w+')
 
@@ -82,21 +84,17 @@ while c!=9:
         db=glob.glob('database/*.db')
 
         for net in db:
-            print '/%s' % (net)
+            print ('/' + net)
 
-        show = raw_input('Insert the Network Name to show: ')
-        show = 'database/%s.db' % (show)
-
-        # fr=open(show, 'r')
-        # ip, mac, vend, name = show_file(fr)
-        # printer(ip, mac, vend, name)
+        show = input('Insert the Network Name to show: ')
+        show = ('database/{0}.db'.format(show))
 
         try: # Try to open the database
             fr=open(show, 'r')
             ip, mac, vend, name = show_file(fr)
             printer(ip, mac, vend, name)
         except:
-            print "Open failed!"
+            print ("Open failed!")
 
         c=input('Back to home (1): ')
 
@@ -108,17 +106,19 @@ while c!=9:
 
     elif c==4: # Edit Database
 
-        print 'Function not already implemented, COOMING SOON!'
+        print ('Function not already implemented, COOMING SOON!')
 
     elif c==5: # Clear Database
 
         os.system('clear')
         menu(0)
         db=glob.glob('database/*.db')
+
         for net in db:
-            print '/%s' % (net)
-        dbdel = raw_input('Insert the Network Name to delete: ')
-        dbdel = 'rm database/%s.db' % (dbdel)
+            print ('/' + net)
+
+        dbdel = input('Insert the Network Name to delete: ')
+        dbdel = ('rm database/{0}.db'.format(dbdel))
         os.system(dbdel)
 
         c=input('Back to home (1): ')
@@ -130,7 +130,7 @@ while c!=9:
 
     elif c==9: # EXIT
 
-        print 'Goodbye!'
+        print ('Goodbye!')
         raise SystemExit
 
-    print '---------------------------------------------'
+    print ('---------------------------------------------')
