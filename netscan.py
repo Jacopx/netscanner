@@ -4,7 +4,7 @@ import time
 import os
 import glob
 from netf import *
-import netifaces
+# import netifaces
 
 # Check if it's RUN with SUDO (root-permission)
 if os.geteuid()!=0:
@@ -39,14 +39,14 @@ while c!=9:
         netname = 'database/%s.db' % (netname)
         try: # Try to open the files, the first for checking the database, the second for appending the net hosts
             fr=open(netname, 'r')
-            fa=open(netname, 'a')
+            fa=open(netname, 'a', 0)
             menu(0)
         except: # If there is no database, create it!
             menu(0)
             print 'File opening failed!'
             print 'Creation of the new DB!'
             new=1
-            f=open(netname, 'w+')
+            f=open(netname, 'w+', 0)
 
         # Call scan function
         nm = nmap.PortScanner()

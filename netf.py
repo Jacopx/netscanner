@@ -30,7 +30,7 @@ def menu(t):
 # The scanner function call the nmap package for scanning the network
 def scanner(nm):
     mac = []; ip = []; vend = []; htname=[]; i=0
-    add=netifaces.ifaddresses('en0')
+    add=netifaces.ifaddresses('en5')
     sadd = '%s/%d' % (add[netifaces.AF_INET][0]['addr'], IPAddress(add[netifaces.AF_INET][0]['netmask']).netmask_bits())
 
     print "Your Network is: " + sadd
